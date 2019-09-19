@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 
@@ -7,12 +7,12 @@ using StringCalculator.Parsers.StringParsing;
 namespace UnitTests
 {
     [TestClass]
-    public class StringParsingV1Tests
+    public class StringParsingV2Tests
     {
-        ParserV1 _parser;
-        public StringParsingV1Tests()
+        ParserV2 _parser;
+        public StringParsingV2Tests()
         {
-            _parser = new ParserV1();
+            _parser = new ParserV2();
         }
 
         [TestMethod]
@@ -20,7 +20,7 @@ namespace UnitTests
         {
             _parser.Reset();
 
-            string text = "23,10938423\r";
+            string text = "23,10938423,287382,309874283,12837\r";
             for (int i = 0; i < text.Length; i++)
             {
                 char c = text[i];
@@ -30,6 +30,36 @@ namespace UnitTests
             List<int> numbers = _parser.GetNumbers();
             Assert.AreEqual(23, numbers[0]);
             Assert.AreEqual(10938423, numbers[1]);
+            Assert.AreEqual(287382, numbers[2]);
+            Assert.AreEqual(309874283, numbers[3]);
+            Assert.AreEqual(12837, numbers[4]);
+        }
+
+        // ParserV2 supports an unlimited number of numbers. Unbound operations are not practical.
+        // I have emailed the recruiter for clarification.
+        // Should we put a limit by total length of string or total execution time?
+        [TestMethod]
+        public void LongStringTest()
+        {
+            _parser.Reset();
+
+            string text = int.MaxValue.ToString();
+            for (int i = 0; i < 100000; i++)
+            {
+                text += "," + int.MaxValue.ToString();
+            }
+            text += "\r";
+            for (int i = 0; i < text.Length; i++)
+            {
+                char c = text[i];
+                _parser.Read(c);
+            }
+
+            List<int> numbers = _parser.GetNumbers();
+            foreach (int number in numbers)
+            {
+                Assert.AreEqual(int.MaxValue, number);
+            }
         }
 
         [TestMethod]
@@ -47,14 +77,16 @@ namespace UnitTests
                 }
 
                 List<int> numbers = _parser.GetNumbers();
-
-                Assert.Fail("Failed to check for maximum support.");
             }
-            catch (Exception exception)
+            catch (FormatException exception)
             {
-                if (!(exception is FormatException) || exception.Message != ParserV1.MAX_NUMBER_OF_NUMBERS_ERROR_MESSAGE)
+                if (exception.Message == ParserV1.MAX_NUMBER_OF_NUMBERS_ERROR_MESSAGE)
                 {
-                    Assert.Fail("Expecting max support exception, but received a different exception: " + exception.Message);
+                    Assert.Fail("Expecting unlimited number of numbers, but validation fired: " + exception.Message);
+                }
+                else
+                {
+                    throw exception;
                 }
             }
         }
@@ -80,7 +112,7 @@ namespace UnitTests
         {
             _parser.Reset();
 
-            string text = "sdfkj,43234\r";
+            string text = "sdfkj,43234,398723\r";
             for (int i = 0; i < text.Length; i++)
             {
                 char c = text[i];
@@ -90,6 +122,7 @@ namespace UnitTests
             List<int> numbers = _parser.GetNumbers();
             Assert.AreEqual(0, numbers[0]);
             Assert.AreEqual(43234, numbers[1]);
+            Assert.AreEqual(398723, numbers[2]);
         }
 
         [TestMethod]
@@ -97,7 +130,7 @@ namespace UnitTests
         {
             _parser.Reset();
 
-            string text = ",43234\r";
+            string text = ",43234,,\r";
             for (int i = 0; i < text.Length; i++)
             {
                 char c = text[i];
@@ -107,6 +140,8 @@ namespace UnitTests
             List<int> numbers = _parser.GetNumbers();
             Assert.AreEqual(0, numbers[0]);
             Assert.AreEqual(43234, numbers[1]);
+            Assert.AreEqual(0, numbers[2]);
+            Assert.AreEqual(0, numbers[3]);
         }
 
         [TestMethod]

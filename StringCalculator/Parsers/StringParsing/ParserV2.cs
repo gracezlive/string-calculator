@@ -6,15 +6,13 @@ using StringCalculator.Common;
 
 namespace StringCalculator.Parsers.StringParsing
 {
-    public class ParserV1 : IStringParser
+    public class ParserV2 : IStringParser
     {
-        public static string MAX_NUMBER_OF_NUMBERS_ERROR_MESSAGE = "A maximum of 2 numbers are supported.";
+        protected List<char> _delimiters = new List<char>();
+        protected List<int> _numbers = new List<int>();
+        protected StringBuilder _stringBuilder;
 
-        private List<char> _delimiters = new List<char>();
-        private List<int> _numbers = new List<int>();
-        private StringBuilder _stringBuilder;
-
-        public ParserV1()
+        public ParserV2()
         {
             Reset();
 
@@ -33,13 +31,12 @@ namespace StringCalculator.Parsers.StringParsing
         }
 
         /// <summary>
-        /// Reads one character at a time into the parse. There is a maximum limit of 2 numbers supported by the parser.
+        /// Reads one character at a time into the parse.
         /// </summary>
         /// <param name="c"></param>
         public void Read(char c)
         {
             if (_delimiters.Count == 0) throw new ArgumentException("At least 1 delimiter is expected. Please call SetDelimiters method first.");
-            if (_numbers.Count >= 2) throw new FormatException(MAX_NUMBER_OF_NUMBERS_ERROR_MESSAGE);
 
             if (c == '\r' || _delimiters.Contains(c))
             {
