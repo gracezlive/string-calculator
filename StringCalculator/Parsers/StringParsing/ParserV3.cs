@@ -6,16 +6,15 @@ using StringCalculator.Common;
 
 namespace StringCalculator.Parsers.StringParsing
 {
-    public class ParserV1 : IStringParser
+    public class ParserV3 : IStringParser
     {
         public static string AT_LEAST_ONE_DELIMITER_ERROR_MESSAGE = "At least 1 delimiter is expected.";
-        public static string MAX_NUMBER_OF_NUMBERS_ERROR_MESSAGE = "A maximum of 2 numbers are supported.";
 
-        private List<string> _delimiters = new List<string>();
-        private List<int> _numbers = new List<int>();
-        private StringBuilder _stringBuilder;
+        protected List<string> _delimiters = new List<string>();
+        protected List<int> _numbers = new List<int>();
+        protected StringBuilder _stringBuilder;
 
-        public ParserV1()
+        public ParserV3()
         {
             Reset();
 
@@ -34,20 +33,28 @@ namespace StringCalculator.Parsers.StringParsing
         }
 
         /// <summary>
-        /// Reads one character at a time into the parser. There is a maximum limit of 2 numbers supported by the parser.
+        /// Reads one character at a time into the parser.
         /// </summary>
         /// <param name="c"></param>
         public void Read(char c)
         {
             if (_delimiters.Count == 0) throw new ArgumentException(AT_LEAST_ONE_DELIMITER_ERROR_MESSAGE + " Please call SetDelimiters method first.");
-            if (_numbers.Count >= 2) throw new FormatException(MAX_NUMBER_OF_NUMBERS_ERROR_MESSAGE);
 
-            if (c == '\r' || _delimiters.Contains(c.ToString()))
+            int len = 0;
+            if (c != '\r') len = ContainsDelimiter(_stringBuilder.ToString() + c);
+
+            if (c == '\r' || len > 0)
             {
+                string s = _stringBuilder.ToString();
+                if (len > 0)
+                {
+                    s = s.Substring(0, s.Length - len + 1);
+                }
+
                 int number = 0;
                 try
                 {
-                    int.TryParse(_stringBuilder.ToString(), out number);
+                    int.TryParse(s, out number);
                 }
                 finally
                 {
@@ -59,6 +66,15 @@ namespace StringCalculator.Parsers.StringParsing
             {
                 _stringBuilder.Append(c);
             }
+        }
+
+        private int ContainsDelimiter(string substring)
+        {
+            foreach (string d in _delimiters)
+            {
+                if (substring.EndsWith(d)) return d.Length;
+            }
+            return 0;
         }
 
         /// <summary>

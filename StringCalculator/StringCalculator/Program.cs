@@ -8,7 +8,7 @@ namespace StringCalculator
             Configuration.RegisterComponents();
 
             App app = new App(Configuration.StringParser, Configuration.Calculator);
-            app.Run();
+            app.Run(args);
         }
     }
 }

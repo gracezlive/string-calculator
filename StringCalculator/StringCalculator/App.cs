@@ -16,8 +16,13 @@ namespace StringCalculator
             _calculator = calculator ?? throw new ArgumentNullException("calculator");
         }
 
-        public void Run()
+        public void Run(string[] delimiters)
         {
+            if (delimiters != null && delimiters.Length > 0)
+            {
+                _parser.SetDelimiters(delimiters);
+            }
+
             do
             {
                 try

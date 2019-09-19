@@ -4,7 +4,7 @@ namespace StringCalculator.Common
 {
     public interface IStringParser
     {
-        void SetDelimiters(char[] delimiters);
+        void SetDelimiters(string[] delimiters);
         void Read(char c);
         List<int> GetNumbers();
         void Reset();
