@@ -10,9 +10,9 @@ namespace StringCalculator.Parsers.StringParsing
     {
         public static string AT_LEAST_ONE_DELIMITER_ERROR_MESSAGE = "At least 1 delimiter is expected.";
 
-        protected List<string> _delimiters = new List<string>();
-        protected List<int> _numbers = new List<int>();
-        protected StringBuilder _stringBuilder;
+        private List<string> _delimiters = new List<string>();
+        private List<int> _numbers = new List<int>();
+        private StringBuilder _stringBuilder;
 
         public ParserV2()
         {
@@ -76,5 +76,7 @@ namespace StringCalculator.Parsers.StringParsing
             _numbers = new List<int>();
             _stringBuilder = new StringBuilder();
         }
+
+        public bool AllowNegative { get; set; } = true;
     }
 }

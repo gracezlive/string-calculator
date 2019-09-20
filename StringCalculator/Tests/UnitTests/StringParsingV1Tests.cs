@@ -60,7 +60,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void EmptyString()
+        public void EmptyStringTest()
         {
             _parser.Reset();
 
@@ -110,7 +110,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void Int32UpperBoundaryChecking()
+        public void Int32UpperBoundaryCheck()
         {
             _parser.Reset();
 
@@ -127,7 +127,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void Int32LowerBoundaryChecking()
+        public void Int32LowerBoundaryCheck()
         {
             _parser.Reset();
 

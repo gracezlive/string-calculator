@@ -36,33 +36,6 @@ namespace UnitTests
             Assert.AreEqual(12837, numbers[4]);
         }
 
-        // ParserV2 supports an unlimited number of numbers. Unbound operations are not practical.
-        // I have emailed the recruiter for clarification.
-        // Should we put a limit by total length of string or total execution time?
-        [TestMethod]
-        public void LongStringTest()
-        {
-            _parser.Reset();
-
-            string text = int.MaxValue.ToString();
-            for (int i = 0; i < 100000; i++)
-            {
-                text += "," + int.MaxValue.ToString();
-            }
-            text += "\r";
-            for (int i = 0; i < text.Length; i++)
-            {
-                char c = text[i];
-                _parser.Read(c);
-            }
-
-            List<int> numbers = _parser.GetNumbers();
-            foreach (int number in numbers)
-            {
-                Assert.AreEqual(int.MaxValue, number);
-            }
-        }
-
         [TestMethod]
         public void MaxSupportCheck()
         {
@@ -93,7 +66,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void EmptyString()
+        public void EmptyStringTest()
         {
             _parser.Reset();
 
@@ -146,7 +119,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void Int32UpperBoundaryChecking()
+        public void Int32UpperBoundaryCheck()
         {
             _parser.Reset();
 
@@ -163,7 +136,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void Int32LowerBoundaryChecking()
+        public void Int32LowerBoundaryCheck()
         {
             _parser.Reset();
 

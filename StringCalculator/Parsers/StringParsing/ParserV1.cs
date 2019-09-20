@@ -78,5 +78,7 @@ namespace StringCalculator.Parsers.StringParsing
             _numbers = new List<int>();
             _stringBuilder = new StringBuilder();
         }
+
+        public bool AllowNegative { get; set; } = true;
     }
 }

@@ -8,5 +8,6 @@ namespace StringCalculator.Common
         void Read(char c);
         List<int> GetNumbers();
         void Reset();
+        bool AllowNegative { get; set; }
     }
 }
