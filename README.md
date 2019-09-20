@@ -4,11 +4,17 @@ String Calculator is a console application that reads a string of delimited numb
 
 Another luxurious feature String Calculator has is its ability to support multiple versions of a string parser. During implementation, a developer can easily switch versions by modifying the Configuration class. To ensure quality, there are unit tests targetting every version of string parser based on features released with that version.
 
-### Syntax
+### Usage
 
-Add a string of comma delimited numbers:
+Add a string of 2 comma delimited numbers:
 ```sh
 dotnet stringcalculator.dll
+Please enter numbers: 1,2
+```
+Add a string of unlimited number of comma delimited numbers: (available in parser v2 and up)
+```sh
+dotnet stringcalculator.dll
+Please enter numbers: 1,2,3,4,5,6,7,8,9
 ```
 Add a string of comma or any specified delimiter delimited numbers: (available in parser v3 and up)
 ```sh
