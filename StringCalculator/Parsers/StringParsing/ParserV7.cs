@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using System.Text.RegularExpressions;
 using StringCalculator.Common;
 
 namespace StringCalculator.Parsers.StringParsing
 {
-    public class ParserV6 : IStringParser
+    public class ParserV7 : IStringParser
     {
         public static string AT_LEAST_ONE_DELIMITER_ERROR_MESSAGE = "At least 1 delimiter is expected.";
         public static string NO_NEGATIVE_ERROR_MESSAGE = "Negative numbers are not allowed: ";
         public static string INVALID_DELIMITER_ERROR_MESSAGE = "Delimiter cannot be '//', as it defines an inline delimiter.";
-        public static string UNSUPPORTED_INLINE_DELIMITER_FORMAT_ERROR_MESSAGE = "Inline delimiter format is not supported. Only single characters are supported.";
+        public static string UNSUPPORTED_INLINE_DELIMITER_FORMAT_ERROR_MESSAGE = "Inline delimiter format is not supported: ";
 
         private List<string> _delimiters = new List<string>();
         private List<string> _inlineDelimiters = new List<string>();
@@ -21,7 +21,7 @@ namespace StringCalculator.Parsers.StringParsing
 
         private bool _firstEntry = false;
 
-        public ParserV6()
+        public ParserV7()
         {
             Reset();
 
@@ -67,19 +67,31 @@ namespace StringCalculator.Parsers.StringParsing
                 {
                     if (s.Length == 2)
                     {
+                        // -ignore
                         // inline delimiter is already supported and will be treated as an existing delimiter
                         // since user's intention is unknown
-                        _stringBuilder.Clear();
                     }
                     else if (s.Length == 3)
                     {
                         _inlineDelimiters.Add(s[2].ToString());
-                        _stringBuilder.Clear();
                     }
                     else
                     {
-                        throw new NotSupportedException(UNSUPPORTED_INLINE_DELIMITER_FORMAT_ERROR_MESSAGE);
+                        Regex p = new Regex(@"^//\[([^\[\]]*)\]$");
+                        Match match = p.Match(s);
+                        if (match.Success)
+                        {
+                            if (match.Groups.Count >= 2)
+                            {
+                                _inlineDelimiters.Add(match.Groups[1].Value);
+                            }
+                        }
+                        else
+                        {
+                            throw new FormatException(string.Format(UNSUPPORTED_INLINE_DELIMITER_FORMAT_ERROR_MESSAGE + " {0}", s));
+                        }
                     }
+                    _stringBuilder.Clear();
                 }
                 else
                 {

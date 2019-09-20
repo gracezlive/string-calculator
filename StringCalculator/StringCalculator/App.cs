@@ -53,6 +53,7 @@ namespace StringCalculator
                             _parser.Read(ch);
                         }
                         while (input != 13);
+                        Console.ReadLine(); // read the rest of the line - \n
 
                         List<int> numbers = _parser.GetNumbers();
                         ICalculationResult result = _calculator.Calculate(numbers, OperatorTypes.Add);

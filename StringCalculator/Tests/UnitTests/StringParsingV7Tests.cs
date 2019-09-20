@@ -7,12 +7,12 @@ using StringCalculator.Parsers.StringParsing;
 namespace UnitTests
 {
     [TestClass]
-    public class StringParsingV6Tests
+    public class StringParsingV7Tests
     {
-        ParserV6 _parser;
-        public StringParsingV6Tests()
+        ParserV7 _parser;
+        public StringParsingV7Tests()
         {
-            _parser = new ParserV6();
+            _parser = new ParserV7();
             _parser.SetDelimiters(new string[1] { "\n" });
         }
 
@@ -85,9 +85,67 @@ namespace UnitTests
 
                 Assert.Fail("Failed to detect invalid inline delimiter format.");
             }
-            catch (NotSupportedException exception)
+            catch (FormatException exception)
             {
-                if (exception.Message != ParserV6.UNSUPPORTED_INLINE_DELIMITER_FORMAT_ERROR_MESSAGE)
+                if (!exception.Message.StartsWith(ParserV7.UNSUPPORTED_INLINE_DELIMITER_FORMAT_ERROR_MESSAGE))
+                {
+                    Assert.Fail("Expected invalid inline delimiter format detection, but received a different exception: " + exception.Message);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void InlineLongDelimiterTest()
+        {
+            _parser.Reset();
+
+            string text = "//[abc],458\n-29,71abc\n-283,abc8\r";
+            for (int i = 0; i < text.Length; i++)
+            {
+                char c = text[i];
+                _parser.Read(c);
+            }
+
+            List<int> numbers = _parser.GetNumbers();
+            Assert.AreEqual(458, numbers[0]);
+            Assert.AreEqual(-29, numbers[1]);
+            Assert.AreEqual(71, numbers[2]);
+            Assert.AreEqual(0, numbers[3]);
+            Assert.AreEqual(-283, numbers[4]);
+            Assert.AreEqual(0, numbers[5]);
+            Assert.AreEqual(8, numbers[6]);
+
+            _parser.Reset();
+
+            text = "1abc2,3\r";
+            for (int i = 0; i < text.Length; i++)
+            {
+                char c = text[i];
+                _parser.Read(c);
+            }
+            // inline delimiter should not be carried over to the next input
+            Assert.AreEqual(0, numbers[0]);
+        }
+
+        [TestMethod]
+        public void InvalidLongInlineDelimiterTest()
+        {
+            _parser.Reset();
+
+            try
+            {
+                string text = "///[ppp][kkk],23,43\r";
+                for (int i = 0; i < text.Length; i++)
+                {
+                    char c = text[i];
+                    _parser.Read(c);
+                }
+
+                Assert.Fail("Failed to detect invalid inline delimiter format.");
+            }
+            catch (FormatException exception)
+            {
+                if (!exception.Message.StartsWith(ParserV7.UNSUPPORTED_INLINE_DELIMITER_FORMAT_ERROR_MESSAGE))
                 {
                     Assert.Fail("Expected invalid inline delimiter format detection, but received a different exception: " + exception.Message);
                 }
