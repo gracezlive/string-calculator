@@ -54,7 +54,7 @@ namespace UnitTests
             {
                 if (!(exception is FormatException) || exception.Message != ParserV1.MAX_NUMBER_OF_NUMBERS_ERROR_MESSAGE)
                 {
-                    Assert.Fail("Expecting max support exception, but received a different exception: " + exception.Message);
+                    Assert.Fail("Expected max support exception, but received a different exception: " + exception.Message);
                 }
             }
         }

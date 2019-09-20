@@ -31,6 +31,15 @@ dotnet stringcalculator.dll -ub=<integer>
 ```sh
 dotnet stringcalculator.dll --upperBound=<integer>
 ```
+Define an inline delimiter with numbers: (available in parser v6 and up)
+```sh
+dotnet stringcalculator.dll
+Please enter numbers: //;,1,2,3,4
+```
+```sh
+dotnet stringcalculator.dll "\n"
+Please enter numbers: //;\n1,2\n3,4
+```
 
 ### Features
 
@@ -43,3 +52,4 @@ Each version of the string parser has additional features than its predecessor.
 |    3    | Supports a newline character as an alternative delimiter |
 |    4    | Supports a property to deny negative numbers |
 |    5    | Supports a property to define the upper bound |
+|    6    | Supports inline single character delimiter definition |

@@ -7,12 +7,13 @@ using StringCalculator.Parsers.StringParsing;
 namespace UnitTests
 {
     [TestClass]
-    public class StringParsingV2Tests
+    public class StringParsingV6Tests
     {
-        ParserV2 _parser;
-        public StringParsingV2Tests()
+        ParserV6 _parser;
+        public StringParsingV6Tests()
         {
-            _parser = new ParserV2();
+            _parser = new ParserV6();
+            _parser.SetDelimiters(new string[1] { "\n" });
         }
 
         [TestMethod]
@@ -20,7 +21,7 @@ namespace UnitTests
         {
             _parser.Reset();
 
-            string text = "23,10938423,287382,309874283,12837\r";
+            string text = "23\n10938423,287382\n309874283,12837\r";
             for (int i = 0; i < text.Length; i++)
             {
                 char c = text[i];
@@ -35,23 +36,12 @@ namespace UnitTests
             Assert.AreEqual(12837, numbers[4]);
         }
 
-        // ParserV2 supports an unlimited number of numbers. Unbound operations are not practical.
-        // I have emailed the recruiter for clarification.
-        // Should we put a limit by total length of string or total execution time?
-        //
-        // Recruiter said to not worry about chair limit or execution time.
-        //
-        /*[TestMethod]
-        public void LongStringTest()
+        [TestMethod]
+        public void InlineDelimiterTest()
         {
             _parser.Reset();
 
-            string text = int.MaxValue.ToString();
-            for (int i = 0; i < 100000; i++)
-            {
-                text += "," + int.MaxValue.ToString();
-            }
-            text += "\r";
+            string text = "//;,458\n-29,71;\n-283,;8\r";
             for (int i = 0; i < text.Length; i++)
             {
                 char c = text[i];
@@ -59,11 +49,39 @@ namespace UnitTests
             }
 
             List<int> numbers = _parser.GetNumbers();
-            foreach (int number in numbers)
+            Assert.AreEqual(458, numbers[0]);
+            Assert.AreEqual(-29, numbers[1]);
+            Assert.AreEqual(71, numbers[2]);
+            Assert.AreEqual(0, numbers[3]);
+            Assert.AreEqual(-283, numbers[4]);
+            Assert.AreEqual(0, numbers[5]);
+            Assert.AreEqual(8, numbers[6]);
+        }
+
+        [TestMethod]
+        public void InvalidInlineDelimiterTest()
+        {
+            _parser.Reset();
+
+            try
             {
-                Assert.AreEqual(int.MaxValue, number);
+                string text = "//yy,23,43\r";
+                for (int i = 0; i < text.Length; i++)
+                {
+                    char c = text[i];
+                    _parser.Read(c);
+                }
+
+                Assert.Fail("Failed to detect invalid inline delimiter format.");
             }
-        }*/
+            catch (NotSupportedException exception)
+            {
+                if (exception.Message != ParserV6.UNSUPPORTED_INLINE_DELIMITER_FORMAT_ERROR_MESSAGE)
+                {
+                    Assert.Fail("Expected invalid inline delimiter format detection, but received a different exception: " + exception.Message);
+                }
+            }
+        }
 
         [TestMethod]
         public void MaxSupportCheck()
@@ -72,7 +90,7 @@ namespace UnitTests
 
             try
             {
-                string text = "1,2,3\r";
+                string text = "1,2\n3\r";
                 for (int i = 0; i < text.Length; i++)
                 {
                     char c = text[i];
@@ -115,7 +133,7 @@ namespace UnitTests
         {
             _parser.Reset();
 
-            string text = "sdfkj,43234,398723\r";
+            string text = "sdfkj,43234\n398723\r";
             for (int i = 0; i < text.Length; i++)
             {
                 char c = text[i];
@@ -133,7 +151,7 @@ namespace UnitTests
         {
             _parser.Reset();
 
-            string text = ",43234,,\r";
+            string text = "\n43234,,\r";
             for (int i = 0; i < text.Length; i++)
             {
                 char c = text[i];
@@ -179,6 +197,67 @@ namespace UnitTests
             List<int> numbers = _parser.GetNumbers();
             Assert.AreEqual(int.MinValue, numbers[0]);
             Assert.AreEqual(0, numbers[1]);
+        }
+
+        [TestMethod]
+        public void DenyNegativeNumbers()
+        {
+            _parser.Reset();
+
+            _parser.AllowNegative = false;
+
+            try
+            {
+                string text = "-32,98\n-3892,3728,-2832,\n123\r";
+                for (int i = 0; i < text.Length; i++)
+                {
+                    char c = text[i];
+                    _parser.Read(c);
+                }
+
+                Assert.Fail("Failed to enforce no negative numbers.");
+            }
+            catch(FormatException formatException)
+            {
+                if (!formatException.Message.StartsWith(ParserV4.NO_NEGATIVE_ERROR_MESSAGE))
+                {
+                    Assert.Fail("Expected enforcement of non-negative numbers, but received a different exception: " + formatException.Message);
+                }
+            }
+            finally
+            {
+                _parser.AllowNegative = true;
+            }
+        }
+
+        [TestMethod]
+        public void UpperBoundCheck()
+        {
+            _parser.Reset();
+
+            _parser.UpperBound = 50;
+
+            try
+            {
+                string text = "23\n50,,28,51,11\n309874283,,-2838\r";
+                for (int i = 0; i < text.Length; i++)
+                {
+                    char c = text[i];
+                    _parser.Read(c);
+                }
+
+                List<int> numbers = _parser.GetNumbers();
+                Assert.AreEqual(23, numbers[0]);
+                Assert.AreEqual(50, numbers[1]);
+                Assert.AreEqual(0, numbers[2]);
+                Assert.AreEqual(28, numbers[3]);
+                Assert.AreEqual(11, numbers[4]);
+                Assert.AreEqual(0, numbers[5]);
+            }
+            finally
+            {
+                _parser.UpperBound = null;
+            }
         }
     }
 }

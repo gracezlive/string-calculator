@@ -13,7 +13,7 @@ namespace StringCalculator
         {
             Container container = new Container();
             container.RegisterType<ICalculator, Calculator>();
-            container.RegisterType<IStringParser, ParserV5>();
+            container.RegisterType<IStringParser, ParserV6>();
 
             _resolver = new Resolver(container);
         }
@@ -30,7 +30,7 @@ namespace StringCalculator
         {
             get
             {
-                return (ParserV5)_resolver.Resolve<IStringParser>();
+                return (ParserV6)_resolver.Resolve<IStringParser>();
             }
         }
     }

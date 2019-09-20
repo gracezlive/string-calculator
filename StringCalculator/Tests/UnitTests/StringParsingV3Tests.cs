@@ -56,7 +56,7 @@ namespace UnitTests
             {
                 if (exception.Message == ParserV1.MAX_NUMBER_OF_NUMBERS_ERROR_MESSAGE)
                 {
-                    Assert.Fail("Expecting unlimited number of numbers, but validation fired: " + exception.Message);
+                    Assert.Fail("Expected unlimited number of numbers, but validation fired: " + exception.Message);
                 }
                 else
                 {

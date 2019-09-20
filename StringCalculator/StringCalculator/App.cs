@@ -18,56 +18,63 @@ namespace StringCalculator
 
         public void Run(string[] delimiters, bool allowNegative = true, int? upperBound = null)
         {
-            if (delimiters?.Length > 0)
+            try
             {
-                _parser.SetDelimiters(delimiters);
-            }
-            _parser.AllowNegative = allowNegative;
-            _parser.UpperBound = upperBound;
-
-            do
-            {
-                try
+                if (delimiters?.Length > 0)
                 {
-                    _parser.Reset();
+                    _parser.SetDelimiters(delimiters);
+                }
+                _parser.AllowNegative = allowNegative;
+                _parser.UpperBound = upperBound;
 
-                    Console.Write("Please enter numbers: ");
-
-                    int input;
-                    do
+                do
+                {
+                    try
                     {
-                        input = Console.Read();
+                        _parser.Reset();
 
-                        char ch;
-                        try
-                        {
-                            ch = Convert.ToChar(input);
-                        }
-                        catch (OverflowException)
-                        {
-                            ch = 'a'; // causes entry to be 0
-                        }
+                        Console.Write("Please enter numbers: ");
 
-                        _parser.Read(ch);
+                        int input;
+                        do
+                        {
+                            input = Console.Read();
+
+                            char ch;
+                            try
+                            {
+                                ch = Convert.ToChar(input);
+                            }
+                            catch (OverflowException)
+                            {
+                                ch = 'a'; // causes entry to be 0
+                            }
+
+                            _parser.Read(ch);
+                        }
+                        while (input != 13);
+
+                        List<int> numbers = _parser.GetNumbers();
+                        ICalculationResult result = _calculator.Calculate(numbers, OperatorTypes.Add);
+                        PrintResult(result.Text);
                     }
-                    while (input != 13);
-
-                    List<int> numbers = _parser.GetNumbers();
-                    ICalculationResult result = _calculator.Calculate(numbers, OperatorTypes.Add);
-                    PrintResult(result.Text);
+                    catch (FormatException formatException)
+                    {
+                        PrintError("Failed to process input: " + formatException.Message);
+                        Console.ReadLine();
+                    }
+                    catch (Exception exception)
+                    {
+                        PrintError("Failed to read input: " + exception.Message);
+                        Console.ReadLine();
+                    }
                 }
-                catch (FormatException formatException)
-                {
-                    PrintError("Failed to process input: " + formatException.Message);
-                    Console.ReadLine();
-                }
-                catch (Exception exception)
-                {
-                    PrintError("Failed to read input: " + exception.Message);
-                    Console.ReadLine();
-                }
+                while (true);
             }
-            while (true);
+            catch (Exception exception)
+            {
+                PrintError("Failed to run calculator: " + exception.Message);
+            }
         }
 
         public void PrintResult(string message)
