@@ -28,6 +28,7 @@ dotnet stringcalculator.dll -denyNegative
 ### Features
 
 Each version of the string parser has additional features than its predecessor.
+
 | VERSION | FEATURES (ACCUMULATIVE) |
 | ------ | ------ |
 |    1    | Supports a maximum of 2 numbers using a comma delimiter |
