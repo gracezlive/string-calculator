@@ -22,7 +22,7 @@ Add a string of delimited non-negative numbers: (available in parser v4 and up)
 dotnet stringcalculator.dll -dn
 ```
 ```sh
-dotnet stringcalculator.dll -denyNegative
+dotnet stringcalculator.dll --denyNegative
 ```
 
 ### Features
