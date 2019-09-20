@@ -4,7 +4,7 @@ String Calculator is a console application that reads a string of delimited numb
 
 A bonus feature String Calculator has is its ability to support multiple versions of a string parser. During implementation, a developer can easily switch versions by modifying the Configuration class. To ensure quality, there are unit tests targetting every version of string parser based on features released with that version.
 
-### Syntax
+### Usage
 
 Add a string of comma delimited numbers:
 ```sh
@@ -31,7 +31,7 @@ dotnet stringcalculator.dll -ub=<integer>
 ```sh
 dotnet stringcalculator.dll --upperBound=<integer>
 ```
-Define a single-character inline delimiter with numbers: (available in parser v6 and up)
+Define a single-character inline delimiter with number input: (available in parser v6 and up)
 ```sh
 dotnet stringcalculator.dll
 Please enter numbers: //#,1,2#3,4
@@ -40,7 +40,7 @@ Please enter numbers: //#,1,2#3,4
 dotnet stringcalculator.dll "\n"
 Please enter numbers: //;\n2;5
 ```
-Define an inline delimiter of any length with numbers: (available in parser v7 and up)
+Define an inline delimiter of any length with number input: (available in parser v7 and up)
 ```sh
 dotnet stringcalculator.dll
 Please enter numbers: //[abc],1abc2,3abc4
@@ -48,6 +48,15 @@ Please enter numbers: //[abc],1abc2,3abc4
 ```sh
 dotnet stringcalculator.dll "\n"
 Please enter numbers: //[***]\n11***22***33
+```
+Define multiple inline delimiters of any length with number input: (available in parser v8 and up)
+```sh
+dotnet stringcalculator.dll
+Please enter numbers: //[abc][##],1abc2##3abc4
+```
+```sh
+dotnet stringcalculator.dll "\n"
+Please enter numbers: //[*][!!][r9r]\n11r9r22*33!!44
 ```
 
 ### Features
@@ -63,3 +72,4 @@ Each version of the string parser has additional features than its predecessor.
 |    5    | Supports a property to define the upper bound |
 |    6    | Supports a single-character inline delimiter definition |
 |    7    | Supports an inline delimiter of any length |
+|    8    | Supports multiple inline delimiters of any length |

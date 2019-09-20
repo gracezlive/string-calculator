@@ -6,7 +6,7 @@ using StringCalculator.Common;
 
 namespace StringCalculator.Parsers.StringParsing
 {
-    public class ParserV7 : IStringParser
+    public class ParserV8 : IStringParser
     {
         public static string AT_LEAST_ONE_DELIMITER_ERROR_MESSAGE = "At least 1 delimiter is expected.";
         public static string NO_NEGATIVE_ERROR_MESSAGE = "Negative numbers are not allowed: ";
@@ -21,7 +21,7 @@ namespace StringCalculator.Parsers.StringParsing
 
         private bool _firstEntry = false;
 
-        public ParserV7()
+        public ParserV8()
         {
             Reset();
 
@@ -77,11 +77,14 @@ namespace StringCalculator.Parsers.StringParsing
                     }
                     else
                     {
-                        Regex p = new Regex(@"^//\[([^\[\]]+)\]$");
+                        Regex p = new Regex(@"^//(\[([^\[\]]+)\])+$");
                         Match match = p.Match(s);
-                        if (match.Success && match.Groups.Count == 2)
+                        if (match.Success && match.Groups.Count == 3)
                         {
-                            _inlineDelimiters.Add(match.Groups[1].Value);
+                            foreach (Capture capture in match.Groups[2].Captures)
+                            {
+                                _inlineDelimiters.Add(capture.Value);
+                            }
                         }
                         else
                         {

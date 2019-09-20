@@ -66,7 +66,8 @@ namespace UnitTests
                 _parser.Read(c);
             }
             // inline delimiter should not be carried over to the next input
-            Assert.AreEqual(0, numbers[0]); 
+            Assert.AreEqual(0, numbers[0]);
+            Assert.AreEqual(1, numbers.Count, "Expected 1 number, but actual count is " + numbers.Count.ToString());
         }
 
         [TestMethod]
@@ -125,6 +126,7 @@ namespace UnitTests
             }
             // inline delimiter should not be carried over to the next input
             Assert.AreEqual(0, numbers[0]);
+            Assert.AreEqual(2, numbers.Count, "Expected 2 numbers, but actual count is " + numbers.Count.ToString());
         }
 
         [TestMethod]
