@@ -16,7 +16,7 @@ namespace StringCalculator
             _calculator = calculator ?? throw new ArgumentNullException("calculator");
         }
 
-        public void Run(string[] delimiters, bool allowNegative = true, int? upperBound = null)
+        public void Run(string[] delimiters, bool allowNegative = true, int? upperBound = null, OperatorTypes mathOperator = OperatorTypes.Add)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace StringCalculator
                         Console.ReadLine(); // read the rest of the line - \n
 
                         List<int> numbers = _parser.GetNumbers();
-                        ICalculationResult result = _calculator.Calculate(numbers, OperatorTypes.Add);
+                        ICalculationResult result = _calculator.Calculate(numbers, mathOperator);
                         PrintResult(result.Text);
                     }
                     catch (FormatException formatException)

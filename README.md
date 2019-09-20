@@ -10,6 +10,21 @@ Add a string of comma delimited numbers:
 ```sh
 dotnet stringcalculator.dll
 ```
+Subtract a string of comma delimited numbers:
+```sh
+dotnet stringcalculator.dll -op=-
+dotnet stringcalculator.dll --operator=-
+```
+Multiply a string of comma delimited numbers:
+```sh
+dotnet stringcalculator.dll -op=*
+dotnet stringcalculator.dll --operator=*
+```
+Divide a string of comma delimited numbers:
+```sh
+dotnet stringcalculator.dll -op=/
+dotnet stringcalculator.dll --operator=/
+```
 Add a string of comma or any specified delimiter delimited numbers: (available in parser v3 and up)
 ```sh
 dotnet stringcalculator.dll "\n"
@@ -61,7 +76,7 @@ Please enter numbers: //[*][!!][r9r]\n11r9r22*33!!44
 
 ### Features
 
-Each version of the string parser has additional features than its predecessor.
+Each version of the string parser has additional features compared to its predecessor.
 
 | VERSION | FEATURES (ACCUMULATIVE) |
 | ------ | ------ |
