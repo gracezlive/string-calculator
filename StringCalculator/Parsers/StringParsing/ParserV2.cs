@@ -78,5 +78,6 @@ namespace StringCalculator.Parsers.StringParsing
         }
 
         public bool AllowNegative { get; set; } = true;
+        public int? UpperBound { get; set; } = null;
     }
 }

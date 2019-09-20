@@ -16,13 +16,14 @@ namespace StringCalculator
             _calculator = calculator ?? throw new ArgumentNullException("calculator");
         }
 
-        public void Run(string[] delimiters, bool allowNegative = true)
+        public void Run(string[] delimiters, bool allowNegative = true, int? upperBound = null)
         {
-            if (delimiters != null && delimiters.Length > 0)
+            if (delimiters?.Length > 0)
             {
                 _parser.SetDelimiters(delimiters);
             }
             _parser.AllowNegative = allowNegative;
+            _parser.UpperBound = upperBound;
 
             do
             {

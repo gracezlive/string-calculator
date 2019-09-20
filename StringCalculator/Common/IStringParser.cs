@@ -9,5 +9,6 @@ namespace StringCalculator.Common
         List<int> GetNumbers();
         void Reset();
         bool AllowNegative { get; set; }
+        int? UpperBound { get; set; }
     }
 }

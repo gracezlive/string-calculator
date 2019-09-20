@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 
 namespace StringCalculator
@@ -11,11 +12,24 @@ namespace StringCalculator
 
             List<string> delimiters = new List<string>();
             bool allowNegative = true;
+            int? upperBound = null;
             foreach (string arg in args)
             {
                 if (arg == "--denyNegative" || arg == "-dn")
                 {
                     allowNegative = false;
+                }
+                else if (arg.StartsWith("--upperBound") || arg.StartsWith("-ub"))
+                {
+                    string[] parts = arg.Split('=');
+                    if (parts.Length >= 2)
+                    {
+                        int value;
+                        if (int.TryParse(parts[1], out value))
+                        {
+                            upperBound = value;
+                        }
+                    }
                 }
                 else
                 {
@@ -24,7 +38,7 @@ namespace StringCalculator
             }
 
             App app = new App(Configuration.StringParser, Configuration.Calculator);
-            app.Run(delimiters.ToArray(), allowNegative);
+            app.Run(delimiters.ToArray(), allowNegative, upperBound);
         }
     }
 }

@@ -109,5 +109,7 @@ namespace StringCalculator.Parsers.StringParsing
         /// When false, parse will throw a FormatException with a list of negative numbers passed in. Default value is true.
         /// </summary>
         public bool AllowNegative { get; set; } = true;
+
+        public int? UpperBound { get; set; } = null;
     }
 }

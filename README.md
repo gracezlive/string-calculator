@@ -24,6 +24,13 @@ dotnet stringcalculator.dll -dn
 ```sh
 dotnet stringcalculator.dll --denyNegative
 ```
+Add a string of delimited numbers not exceeding an upper bound: (available in parser v5 and up)
+```sh
+dotnet stringcalculator.dll -ub=<integer>
+```
+```sh
+dotnet stringcalculator.dll --upperBound=<integer>
+```
 
 ### Features
 
@@ -35,3 +42,4 @@ Each version of the string parser has additional features than its predecessor.
 |    2    | Supports an unlimited number of numbers |
 |    3    | Supports a newline character as an alternative delimiter |
 |    4    | Supports a property to deny negative numbers |
+|    5    | Supports a property to define the upper bound |
